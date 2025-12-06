@@ -2,6 +2,7 @@
 // https://adventofcode.com/2025/day/1
 
 const std = @import("std");
+const fs = @import("fs.zig");
 
 const Dial = struct {
     currentPointer: i32,
@@ -19,14 +20,6 @@ const Dial = struct {
         return self.currentPointer == 0;
     }
 };
-
-fn getInput(allocator: std.mem.Allocator) ![]const u8 {
-    const file = try std.fs.cwd().openFile("src/day1_part1_input.txt", .{});
-    defer file.close();
-
-    const data = try file.readToEndAlloc(allocator, std.math.maxInt(usize));
-    return data;
-}
 
 pub fn secretEntrance(data: []const u8) !u32 {
     var iter = std.mem.splitScalar(u8, data, '\n');
@@ -76,7 +69,7 @@ test "secret entrance example input" {
 
 test "secret entrance my input" {
     const allocator = std.heap.page_allocator;
-    const data = try getInput(allocator);
+    const data = try fs.getInput("inputs/day1_part1_input.txt", allocator);
     defer allocator.free(data);
 
     const value = try secretEntrance(data);
